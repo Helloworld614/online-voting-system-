@@ -1,0 +1,3822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SmartVote | AIMT Student Election 2026</title>
+
+<style>
+:root{
+    --primary:#6366f1;
+    --primary2:#8b5cf6;
+    --cyan:#06b6d4;
+    --green:#22c55e;
+    --red:#ef4444;
+    --orange:#f59e0b;
+    --bg:#f5f7fb;
+    --card:rgba(255,255,255,.82);
+    --text:#111827;
+    --muted:#6b7280;
+    --border:rgba(17,24,39,.09);
+    --shadow:0 25px 70px rgba(31,41,55,.12);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+    transition:.3s;
+    perspective:1600px;
+}
+
+body.dark{
+    --bg:#070a13;
+    --card:rgba(17,24,39,.84);
+    --text:#f9fafb;
+    --muted:#9ca3af;
+    --border:rgba(255,255,255,.09);
+    --shadow:0 25px 80px rgba(0,0,0,.45);
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+button,input,textarea,select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+.background{
+    position:fixed;
+    inset:0;
+    z-index:-20;
+    overflow:hidden;
+}
+
+.blob{
+    position:absolute;
+    width:450px;
+    height:450px;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.20;
+    animation:blobFloat 12s infinite ease-in-out;
+}
+
+.blob.one{
+    background:#6366f1;
+    top:-160px;
+    left:-100px;
+}
+
+.blob.two{
+    background:#06b6d4;
+    right:-150px;
+    top:30%;
+    animation-delay:2s;
+}
+
+.blob.three{
+    background:#8b5cf6;
+    bottom:-200px;
+    left:35%;
+    animation-delay:4s;
+}
+
+@keyframes blobFloat{
+    0%,100%{
+        transform:translate(0,0) scale(1);
+    }
+    50%{
+        transform:translate(60px,-40px) scale(1.12);
+    }
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar{
+    position:fixed;
+    top:15px;
+    left:50%;
+    transform:translateX(-50%) translateZ(80px);
+    width:min(1200px,94%);
+    padding:13px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    z-index:1000;
+    background:var(--card);
+    backdrop-filter:blur(20px);
+    border:1px solid var(--border);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:21px;
+    font-weight:900;
+}
+
+.logo-icon{
+    width:43px;
+    height:43px;
+    display:grid;
+    place-items:center;
+    border-radius:14px;
+    color:white;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    box-shadow:0 12px 30px rgba(99,102,241,.35);
+}
+
+.logo span:last-child{
+    background:linear-gradient(
+        90deg,
+        var(--primary),
+        var(--primary2),
+        var(--cyan)
+    );
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.nav-links{
+    display:flex;
+    gap:21px;
+    align-items:center;
+}
+
+.nav-links a{
+    color:var(--muted);
+    font-size:13px;
+    font-weight:800;
+    transition:.2s;
+}
+
+.nav-links a:hover{
+    color:var(--primary);
+}
+
+.nav-actions{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.icon-btn{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:18px;
+}
+
+.btn{
+    border:0;
+    padding:12px 20px;
+    border-radius:13px;
+    color:white;
+    font-weight:850;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
+    box-shadow:0 12px 28px rgba(99,102,241,.28);
+    transition:.3s;
+    transform-style:preserve-3d;
+}
+
+.btn:hover{
+    transform:translateY(-4px) translateZ(8px);
+    box-shadow:0 18px 38px rgba(99,102,241,.38);
+}
+
+.btn-outline{
+    background:transparent;
+    border:1px solid var(--primary);
+    color:var(--primary);
+    box-shadow:none;
+}
+
+.btn-danger{
+    background:var(--red);
+}
+
+.btn-green{
+    background:var(--green);
+}
+
+.btn-orange{
+    background:var(--orange);
+}
+
+.btn:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+    transform:none;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    max-width:1200px;
+    min-height:850px;
+    margin:auto;
+    padding:150px 25px 70px;
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:60px;
+    align-items:center;
+    transform-style:preserve-3d;
+}
+
+.hero-content{
+    transform:translateZ(40px);
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:8px 14px;
+    border-radius:30px;
+    background:rgba(99,102,241,.1);
+    color:var(--primary);
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.badge::before{
+    content:"";
+    width:8px;
+    height:8px;
+    background:var(--green);
+    border-radius:50%;
+    box-shadow:0 0 0 6px rgba(34,197,94,.12);
+    animation:pulse 1.8s infinite;
+}
+
+.hero h1{
+    font-size:clamp(50px,7vw,88px);
+    line-height:.95;
+    letter-spacing:-5px;
+    margin:24px 0;
+}
+
+.gradient-text{
+    background:linear-gradient(
+        90deg,
+        var(--primary),
+        var(--primary2),
+        var(--cyan)
+    );
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.hero-description{
+    max-width:650px;
+    color:var(--muted);
+    font-size:18px;
+    line-height:1.8;
+    margin-bottom:30px;
+}
+
+.hero-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.trust{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:32px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.avatars{
+    display:flex;
+}
+
+.avatar{
+    width:33px;
+    height:33px;
+    margin-left:-8px;
+    border:2px solid var(--bg);
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    color:white;
+    font-size:11px;
+    font-weight:900;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--cyan)
+    );
+}
+
+.avatar:first-child{
+    margin-left:0;
+}
+
+/* =========================
+   3D VOTING MACHINE
+========================= */
+
+.visual{
+    position:relative;
+    min-height:540px;
+    display:grid;
+    place-items:center;
+    transform-style:preserve-3d;
+}
+
+.vote-machine{
+    width:340px;
+    padding:30px;
+    border-radius:32px;
+    color:white;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(99,102,241,.98),
+            rgba(49,46,129,1)
+        );
+    box-shadow:
+        0 50px 100px rgba(49,46,129,.40),
+        25px 30px 0 rgba(49,46,129,.13),
+        inset 0 1px 1px rgba(255,255,255,.3);
+    transform:
+        rotateY(-13deg)
+        rotateX(7deg)
+        rotateZ(2deg)
+        translateZ(70px);
+    transform-style:preserve-3d;
+    animation:machineFloat 5s infinite ease-in-out;
+}
+
+@keyframes machineFloat{
+    0%,100%{
+        transform:
+            rotateY(-13deg)
+            rotateX(7deg)
+            rotateZ(2deg)
+            translateY(0)
+            translateZ(70px);
+    }
+
+    50%{
+        transform:
+            rotateY(-7deg)
+            rotateX(4deg)
+            rotateZ(-2deg)
+            translateY(-18px)
+            translateZ(95px);
+    }
+}
+
+.machine-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.machine-top strong{
+    letter-spacing:1px;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:11px;
+    color:#bbf7d0;
+}
+
+.status i{
+    width:8px;
+    height:8px;
+    background:#22c55e;
+    border-radius:50%;
+    animation:pulse 1.5s infinite;
+}
+
+.machine-screen{
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:20px;
+    background:rgba(255,255,255,.11);
+    border:1px solid rgba(255,255,255,.15);
+    transform:translateZ(30px);
+}
+
+.machine-screen small{
+    color:#c7d2fe;
+}
+
+.machine-screen h2{
+    font-size:25px;
+    margin-top:5px;
+}
+
+.vote-option{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:13px;
+    margin-top:10px;
+    border-radius:13px;
+    background:rgba(255,255,255,.1);
+    box-shadow:0 12px 25px rgba(0,0,0,.1);
+    transform:translateZ(25px);
+    transition:.3s;
+}
+
+.vote-option:hover{
+    transform:translateZ(42px) translateX(5px);
+    background:rgba(255,255,255,.18);
+}
+
+.floating-card{
+    position:absolute;
+    padding:15px 18px;
+    border-radius:16px;
+    background:var(--card);
+    backdrop-filter:blur(18px);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    font-size:13px;
+    font-weight:850;
+    transform-style:preserve-3d;
+}
+
+.floating-one{
+    top:25px;
+    right:0;
+    animation:floatCard 4s infinite ease-in-out;
+}
+
+.floating-two{
+    bottom:30px;
+    left:0;
+    animation:floatCard 4s infinite ease-in-out 1.2s;
+}
+
+@keyframes floatCard{
+    0%,100%{
+        transform:translateY(0) translateZ(70px) rotateY(0);
+    }
+    50%{
+        transform:translateY(-15px) translateZ(100px) rotateY(-5deg);
+    }
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+    max-width:1120px;
+    margin:0 auto 80px;
+    padding:0 25px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    transform-style:preserve-3d;
+}
+
+.stat-card{
+    padding:25px;
+    border-radius:22px;
+    background:var(--card);
+    backdrop-filter:blur(18px);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    transform-style:preserve-3d;
+    transition:.35s;
+}
+
+.stat-card:hover{
+    transform:translateY(-8px) rotateX(4deg) translateZ(15px);
+}
+
+.stat-icon{
+    font-size:27px;
+}
+
+.stat-card h2{
+    font-size:34px;
+    margin-top:10px;
+}
+
+.stat-card p{
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.section{
+    max-width:1120px;
+    margin:auto;
+    padding:90px 25px;
+    transform-style:preserve-3d;
+}
+
+.section-heading{
+    margin-bottom:38px;
+    transform:translateZ(20px);
+}
+
+.eyebrow{
+    color:var(--primary);
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:1.6px;
+}
+
+.section-heading h2{
+    font-size:46px;
+    letter-spacing:-2px;
+    margin:9px 0;
+}
+
+.section-heading p{
+    color:var(--muted);
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-box{
+    width:100%;
+    padding:16px 18px;
+    margin-bottom:25px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    outline:none;
+    box-shadow:var(--shadow);
+}
+
+.search-box:focus{
+    border-color:var(--primary);
+}
+
+/* =========================
+   CANDIDATES 3D
+========================= */
+
+.candidate-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:22px;
+    perspective:1400px;
+}
+
+.candidate-card{
+    position:relative;
+    overflow:hidden;
+    padding:25px;
+    min-height:430px;
+    border-radius:25px;
+    background:var(--card);
+    backdrop-filter:blur(18px);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    transform-style:preserve-3d;
+    transition:
+        transform .4s ease,
+        box-shadow .4s ease;
+}
+
+.candidate-card::before{
+    content:"";
+    position:absolute;
+    width:170px;
+    height:170px;
+    border-radius:50%;
+    right:-90px;
+    top:-90px;
+    background:linear-gradient(
+        135deg,
+        rgba(99,102,241,.20),
+        rgba(6,182,212,.08)
+    );
+}
+
+.candidate-card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+    pointer-events:none;
+    background:linear-gradient(
+        135deg,
+        rgba(255,255,255,.15),
+        transparent 40%
+    );
+}
+
+.candidate-card:hover{
+    transform:
+        translateY(-15px)
+        rotateX(6deg)
+        rotateY(-5deg)
+        translateZ(25px);
+    box-shadow:
+        0 40px 80px rgba(31,41,55,.22);
+}
+
+.candidate-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+}
+
+.candidate-symbol{
+    width:67px;
+    height:67px;
+    display:grid;
+    place-items:center;
+    border-radius:19px;
+    font-size:33px;
+    background:rgba(99,102,241,.10);
+    box-shadow:
+        0 15px 35px rgba(99,102,241,.12),
+        inset 0 1px 0 rgba(255,255,255,.4);
+    transform:translateZ(40px);
+}
+
+.verified{
+    color:var(--green);
+    font-size:11px;
+    font-weight:900;
+}
+
+.candidate-card h3{
+    position:relative;
+    margin-top:22px;
+    font-size:22px;
+    transform:translateZ(25px);
+}
+
+.party{
+    position:relative;
+    color:var(--primary);
+    font-size:13px;
+    font-weight:850;
+    margin:5px 0 13px;
+    transform:translateZ(20px);
+}
+
+.candidate-card > p{
+    position:relative;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.7;
+    transform:translateZ(17px);
+}
+
+.candidate-thought{
+    position:relative;
+    padding:14px;
+    margin:16px 0 20px;
+    border-radius:15px;
+    background:rgba(99,102,241,.07);
+    border:1px solid rgba(99,102,241,.13);
+    transform:translateZ(28px);
+}
+
+.candidate-thought span{
+    display:block;
+    color:var(--primary);
+    font-size:10px;
+    font-weight:950;
+    letter-spacing:.9px;
+    text-transform:uppercase;
+    margin-bottom:7px;
+}
+
+.candidate-thought p{
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.6;
+}
+
+.vote-btn{
+    position:absolute;
+    left:25px;
+    right:25px;
+    bottom:25px;
+    width:calc(100% - 50px);
+    transform:translateZ(35px);
+}
+
+/* =========================
+   THOUGHTS
+========================= */
+
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:18px;
+}
+
+.feature{
+    padding:25px;
+    min-height:245px;
+    border-radius:21px;
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    transform-style:preserve-3d;
+    transition:.35s;
+}
+
+.feature:hover{
+    transform:
+        translateY(-9px)
+        rotateX(3deg)
+        translateZ(15px);
+}
+
+.feature-icon{
+    font-size:33px;
+    margin-bottom:15px;
+    transform:translateZ(30px);
+}
+
+.feature h3{
+    margin-bottom:8px;
+    transform:translateZ(20px);
+}
+
+.feature p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.7;
+}
+
+.demo-note{
+    margin-top:25px;
+    padding:15px 18px;
+    text-align:center;
+    border-radius:15px;
+    color:var(--muted);
+    font-size:12px;
+    background:rgba(6,182,212,.07);
+    border:1px solid rgba(6,182,212,.14);
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-bottom:25px;
+}
+
+.dash-chip{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:15px;
+    border-radius:17px;
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    transform-style:preserve-3d;
+    transition:.3s;
+}
+
+.dash-chip:hover{
+    transform:translateY(-6px) translateZ(10px);
+}
+
+.dash-chip > span:first-child{
+    font-size:21px;
+}
+
+.dash-chip b{
+    display:block;
+    font-size:12px;
+}
+
+.dash-chip small{
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+    margin-top:3px;
+}
+
+.pulse-dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--green);
+    animation:pulse 1.7s infinite;
+}
+
+@keyframes pulse{
+    0%{
+        box-shadow:0 0 0 0 rgba(34,197,94,.55);
+    }
+    70%{
+        box-shadow:0 0 0 10px rgba(34,197,94,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(34,197,94,0);
+    }
+}
+
+/* =========================
+   RESULTS
+========================= */
+
+.results-wrapper{
+    display:grid;
+    grid-template-columns:.8fr 1.2fr;
+    gap:25px;
+}
+
+.winner-card{
+    position:relative;
+    overflow:hidden;
+    padding:35px;
+    min-height:350px;
+    border-radius:27px;
+    color:white;
+    background:
+        linear-gradient(
+            145deg,
+            #312e81,
+            #6366f1
+        );
+    box-shadow:
+        0 30px 70px rgba(79,70,229,.35);
+    transform-style:preserve-3d;
+}
+
+.winner-card::before{
+    content:"";
+    position:absolute;
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    right:-90px;
+    top:-90px;
+    background:rgba(255,255,255,.08);
+    animation:orbit 5s linear infinite;
+}
+
+@keyframes orbit{
+    50%{
+        transform:scale(1.4) rotate(180deg);
+    }
+    100%{
+        transform:scale(1) rotate(360deg);
+    }
+}
+
+.trophy{
+    position:relative;
+    font-size:65px;
+    transform:translateZ(45px);
+}
+
+.winner-card h2{
+    position:relative;
+    font-size:31px;
+    margin:15px 0 5px;
+    transform:translateZ(30px);
+}
+
+.winner-card p{
+    position:relative;
+    color:#c7d2fe;
+}
+
+.result-list{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.result{
+    padding:20px;
+    border-radius:18px;
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    transform-style:preserve-3d;
+    transition:.35s;
+}
+
+.result:hover{
+    transform:
+        translateX(5px)
+        translateZ(12px)
+        rotateX(2deg);
+}
+
+.result-top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+    font-size:13px;
+}
+
+.progress{
+    height:9px;
+    border-radius:20px;
+    overflow:hidden;
+    background:rgba(107,114,128,.14);
+}
+
+.progress div{
+    width:0;
+    height:100%;
+    border-radius:20px;
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--cyan)
+        );
+    box-shadow:0 0 20px rgba(99,102,241,.3);
+    transition:width 1.2s cubic-bezier(.22,1,.36,1);
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+.login-area{
+    max-width:650px;
+    margin:auto;
+    padding:90px 25px;
+}
+
+.login-card{
+    padding:35px;
+    border-radius:27px;
+    background:var(--card);
+    backdrop-filter:blur(20px);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    transform-style:preserve-3d;
+}
+
+.login-card:hover{
+    transform:translateY(-5px) rotateX(2deg);
+}
+
+.login-card h2{
+    font-size:30px;
+    margin-bottom:7px;
+}
+
+.login-card > p{
+    color:var(--muted);
+    margin-bottom:25px;
+}
+
+.form-group{
+    margin-bottom:17px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:850;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    padding:14px;
+    border-radius:11px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.5);
+    color:var(--text);
+    outline:none;
+}
+
+.dark .form-group input,
+.dark .form-group textarea,
+.dark .form-group select{
+    background:rgba(0,0,0,.22);
+}
+
+.form-group input:focus,
+.form-group textarea:focus{
+    border-color:var(--primary);
+}
+
+.login-message{
+    min-height:20px;
+    margin-top:14px;
+    text-align:center;
+    font-size:12px;
+}
+
+/* =========================
+   ADMIN
+========================= */
+
+.admin-section{
+    display:none;
+}
+
+.admin-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.admin-card{
+    padding:24px;
+    border-radius:21px;
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    transform-style:preserve-3d;
+    transition:.3s;
+}
+
+.admin-card:hover{
+    transform:translateY(-7px) translateZ(12px);
+}
+
+.admin-card h3{
+    margin-bottom:8px;
+}
+
+.admin-number{
+    font-size:34px;
+    font-weight:950;
+    color:var(--primary);
+}
+
+.admin-box{
+    margin-bottom:20px;
+}
+
+.admin-form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:15px;
+}
+
+.admin-form input{
+    width:100%;
+    padding:13px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    outline:none;
+}
+
+.admin-form button{
+    grid-column:1/-1;
+}
+
+.admin-list{
+    display:flex;
+    flex-direction:column;
+}
+
+.admin-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    padding:15px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.admin-row:last-child{
+    border-bottom:0;
+}
+
+.admin-actions{
+    display:flex;
+    gap:7px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    place-items:center;
+    padding:20px;
+    background:rgba(0,0,0,.62);
+    backdrop-filter:blur(9px);
+    z-index:5000;
+}
+
+.modal.show{
+    display:grid;
+}
+
+.modal-box{
+    width:min(510px,100%);
+    padding:30px;
+    border-radius:25px;
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:0 40px 100px rgba(0,0,0,.35);
+    transform-style:preserve-3d;
+    animation:modalIn .35s ease;
+}
+
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:
+            translateY(30px)
+            rotateX(8deg)
+            scale(.95);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.modal-box h2{
+    margin-bottom:8px;
+}
+
+.modal-box p{
+    color:var(--muted);
+    line-height:1.6;
+}
+
+.modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:25px;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    z-index:7000;
+    max-width:360px;
+    padding:15px 20px;
+    border-radius:14px;
+    color:white;
+    background:#111827;
+    box-shadow:0 20px 50px rgba(0,0,0,.3);
+    transform:translateY(120px);
+    opacity:0;
+    transition:.35s;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+/* =========================
+   QUOTES
+========================= */
+
+.quotes-section{
+    padding:70px 25px;
+    text-align:center;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(99,102,241,.05),
+            rgba(139,92,246,.05)
+        );
+}
+
+.quote-card{
+    max-width:820px;
+    margin:auto;
+    padding:40px;
+    border-radius:25px;
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    transform-style:preserve-3d;
+}
+
+.quote-text{
+    font-size:21px;
+    font-style:italic;
+    line-height:1.8;
+    margin-bottom:17px;
+}
+
+.quote-author{
+    color:var(--primary);
+    font-weight:850;
+}
+
+.quote-nav{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-top:20px;
+}
+
+.quote-dot{
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:var(--border);
+    cursor:pointer;
+}
+
+.quote-dot.active{
+    background:var(--primary);
+    transform:scale(1.25);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    margin-top:50px;
+    padding:50px 25px;
+    text-align:center;
+    color:#9ca3af;
+    background:#090d19;
+}
+
+.footer-logo{
+    color:white;
+    font-size:22px;
+    font-weight:950;
+    margin-bottom:8px;
+}
+
+.footer-small{
+    font-size:12px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:950px){
+
+    .nav-links{
+        display:none;
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+        padding-top:135px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .dashboard-strip{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .results-wrapper{
+        grid-template-columns:1fr;
+    }
+
+    .admin-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:560px){
+
+    .hero{
+        padding-left:18px;
+        padding-right:18px;
+    }
+
+    .hero h1{
+        font-size:46px;
+        letter-spacing:-3px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .dashboard-strip{
+        grid-template-columns:1fr;
+    }
+
+    .vote-machine{
+        width:290px;
+    }
+
+    .section-heading h2{
+        font-size:35px;
+    }
+
+    .admin-grid{
+        grid-template-columns:1fr;
+    }
+
+    .admin-form{
+        grid-template-columns:1fr;
+    }
+
+    .admin-row{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .nav-actions .btn{
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="background">
+    <div class="blob one"></div>
+    <div class="blob two"></div>
+    <div class="blob three"></div>
+</div>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<header class="navbar">
+
+    <a href="#home" class="logo">
+        <div class="logo-icon">🗳️</div>
+        <span>SmartVote</span>
+    </a>
+
+    <nav class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#candidates">Candidates</a>
+        <a href="#thoughts">Thoughts</a>
+        <a href="#features">Features</a>
+        <a href="#results">Results</a>
+        <a href="#admin">Admin</a>
+    </nav>
+
+    <div class="nav-actions">
+
+        <button
+            class="icon-btn"
+            id="themeBtn"
+            onclick="toggleTheme()"
+        >
+            🌙
+        </button>
+
+        <a href="#login" class="btn">
+            Login
+        </a>
+
+    </div>
+
+</header>
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section id="home" class="hero">
+
+    <div class="hero-content">
+
+        <span class="badge">
+            AIMT STUDENT ELECTION 2026
+        </span>
+
+        <h1>
+            Your Vote.
+            <br>
+            Your
+            <span class="gradient-text">
+                Voice.
+            </span>
+        </h1>
+
+        <p class="hero-description">
+            SmartVote is a modern digital Voting Management System
+            designed for student elections with candidate management,
+            secure demo voting, live statistics and transparent results.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a
+                href="#candidates"
+                class="btn"
+            >
+                🗳️ Vote Now
+            </a>
+
+            <a
+                href="#results"
+                class="btn btn-outline"
+            >
+                📊 View Results
+            </a>
+
+        </div>
+
+        <div class="trust">
+
+            <div class="avatars">
+                <div class="avatar">SK</div>
+                <div class="avatar">SS</div>
+                <div class="avatar">SH</div>
+                <div class="avatar">SY</div>
+                <div class="avatar">AS</div>
+            </div>
+
+            <span>
+                Student-powered digital election platform
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- 3D MACHINE -->
+
+    <div class="visual">
+
+        <div class="floating-card floating-one">
+            🔒 Secure Voting
+        </div>
+
+        <div class="floating-card floating-two">
+            📊 Live Results
+        </div>
+
+        <div class="vote-machine">
+
+            <div class="machine-top">
+
+                <strong>
+                    SMARTVOTE
+                </strong>
+
+                <div class="status">
+                    <i></i>
+                    SYSTEM ONLINE
+                </div>
+
+            </div>
+
+            <div class="machine-screen">
+
+                <small>
+                    CURRENT ELECTION
+                </small>
+
+                <h2>
+                    AIMT 2026
+                </h2>
+
+                <div class="vote-option">
+                    <span>🚀 Saurabh Kumar</span>
+                    <b>✓</b>
+                </div>
+
+                <div class="vote-option">
+                    <span>🌱 Saumya Singh</span>
+                    <span>26%</span>
+                </div>
+
+                <div class="vote-option">
+                    <span>📣 Shruti</span>
+                    <span>21%</span>
+                </div>
+
+                <div class="vote-option">
+                    <span>⚡ Sumit Yadav</span>
+                    <span>18%</span>
+                </div>
+
+                <div class="vote-option">
+                    <span>⭐ Aarav Sharma</span>
+                    <span>14%</span>
+                </div>
+
+            </div>
+
+            <button
+                class="btn"
+                style="width:100%"
+                onclick="document.getElementById('candidates').scrollIntoView()"
+            >
+                Enter Voting Booth →
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     STATS
+========================= -->
+
+<section class="stats">
+
+    <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <h2 id="voterCount">0</h2>
+        <p>Registered Voters</p>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🧑‍💼</div>
+        <h2 id="candidateCount">5</h2>
+        <p>Candidates</p>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🗳️</div>
+        <h2 id="voteCount">0</h2>
+        <p>Total Votes</p>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <h2 id="participation">0%</h2>
+        <p>Participation</p>
+    </div>
+
+</section>
+
+<!-- =========================
+     CANDIDATES
+========================= -->
+
+<section id="candidates" class="section">
+
+    <div class="section-heading">
+
+        <span class="eyebrow">
+            CANDIDATES
+        </span>
+
+        <h2>
+            Choose Your Representative
+        </h2>
+
+        <p>
+            Review every candidate's manifesto and student-election vision.
+        </p>
+
+    </div>
+
+    <input
+        id="candidateSearch"
+        class="search-box"
+        placeholder="🔎 Search candidate, party or vision..."
+        oninput="renderCandidates()"
+    >
+
+    <div
+        id="candidateGrid"
+        class="candidate-grid"
+    ></div>
+
+</section>
+
+<!-- =========================
+     POLITICAL THOUGHTS
+========================= -->
+
+<section id="thoughts" class="section">
+
+    <div class="section-heading">
+
+        <span class="eyebrow">
+            STUDENT POLITICAL THOUGHTS
+        </span>
+
+        <h2>
+            What They Stand For
+        </h2>
+
+        <p>
+            Compare the fictional student-election viewpoints
+            before making your choice.
+        </p>
+
+    </div>
+
+    <div class="feature-grid">
+
+        <div class="feature">
+            <div class="feature-icon">🚀</div>
+            <h3>Saurabh Kumar</h3>
+            <p>
+                <b>Student Progress Alliance</b>
+            </p>
+            <p>
+                "Student politics should create measurable campus
+                improvement through practical education, transparent
+                representation and stronger technical opportunities."
+            </p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">🌱</div>
+            <h3>Saumya Singh</h3>
+            <p>
+                <b>Students First Forum</b>
+            </p>
+            <p>
+                "Student welfare comes first. Every student should
+                have a fair platform to raise concerns, share ideas
+                and participate in campus decisions."
+            </p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">📣</div>
+            <h3>Shruti</h3>
+            <p>
+                <b>Campus Voice Collective</b>
+            </p>
+            <p>
+                "Representation means communication. Students deserve
+                an open forum where academic concerns, suggestions
+                and decisions are discussed clearly."
+            </p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">⚡</div>
+            <h3>Sumit Yadav</h3>
+            <p>
+                <b>Development & Innovation Front</b>
+            </p>
+            <p>
+                "A modern campus needs innovation. Student projects,
+                digital services, competitions and skill development
+                should be central to student leadership."
+            </p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">⭐</div>
+            <h3>Aarav Sharma</h3>
+            <p>
+                <b>Future Campus Movement</b>
+            </p>
+            <p>
+                "Student leadership should connect campus life with
+                future careers through peer mentoring, student-led
+                events and balanced academic development."
+            </p>
+        </div>
+
+    </div>
+
+    <div class="demo-note">
+        ℹ️ These political viewpoints and parties are fictional and
+        are included only for the SmartVote educational project demo.
+    </div>
+
+</section>
+
+<!-- =========================
+     FEATURES
+========================= -->
+
+<section id="features" class="section">
+
+    <div class="section-heading">
+
+        <span class="eyebrow">
+            PLATFORM FEATURES
+        </span>
+
+        <h2>
+            Built Like a Real Election System
+        </h2>
+
+        <p>
+            SmartVote combines a modern interface with practical
+            election-management features.
+        </p>
+
+    </div>
+
+    <div class="feature-grid">
+
+        <div class="feature">
+            <div class="feature-icon">🔐</div>
+            <h3>One Vote Protection</h3>
+            <p>
+                Registered voters can cast only one vote in the
+                current browser-based demonstration.
+            </p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">📊</div>
+            <h3>Live Dashboard</h3>
+            <p>
+                Vote totals, participation and candidate percentages
+                update automatically.
+            </p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">👨‍💼</div>
+            <h3>Admin Management</h3>
+            <p>
+                Admin users can add, edit and remove candidates and
+                control election status.
+            </p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">💾</div>
+            <h3>Local Data Storage</h3>
+            <p>
+                Demo registration, voting and election data persists
+                using browser LocalStorage.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     RESULTS
+========================= -->
+
+<section id="results" class="section">
+
+    <div class="section-heading">
+
+        <span class="eyebrow">
+            LIVE ELECTION DASHBOARD
+        </span>
+
+        <h2>
+            Election Results
+        </h2>
+
+        <p>
+            Real-time animated statistics generated from the
+            current SmartVote demo data.
+        </p>
+
+    </div>
+
+    <div class="dashboard-strip">
+
+        <div class="dash-chip">
+
+            <span class="pulse-dot"></span>
+
+            <div>
+                <b id="liveStatus">
+                    LIVE MONITORING
+                </b>
+
+                <small>
+                    Election engine
+                </small>
+            </div>
+
+        </div>
+
+        <div class="dash-chip">
+
+            <span>🕒</span>
+
+            <div>
+                <b id="dashboardTime">
+                    --:--:--
+                </b>
+
+                <small>
+                    Local time
+                </small>
+            </div>
+
+        </div>
+
+        <div class="dash-chip">
+
+            <span>📊</span>
+
+            <div>
+                <b id="leaderMargin">
+                    0%
+                </b>
+
+                <small>
+                    Leader share
+                </small>
+            </div>
+
+        </div>
+
+        <div class="dash-chip">
+
+            <span>⚡</span>
+
+            <div>
+                <b id="activityText">
+                    Awaiting votes
+                </b>
+
+                <small>
+                    System activity
+                </small>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="results-wrapper">
+
+        <div
+            id="winnerCard"
+            class="winner-card"
+        >
+
+            <div class="trophy">
+                🏆
+            </div>
+
+            <p>
+                CURRENT LEADER
+            </p>
+
+            <h2 id="winnerName">
+                No votes yet
+            </h2>
+
+            <p id="winnerParty">
+                Waiting for student votes
+            </p>
+
+            <br>
+
+            <p id="winnerVotes">
+                0 Votes
+            </p>
+
+        </div>
+
+        <div
+            id="resultList"
+            class="result-list"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     LOGIN
+========================= -->
+
+<section id="login" class="login-area">
+
+    <div class="login-card">
+
+        <h2>
+            Student Voting Login
+        </h2>
+
+        <p>
+            Register or login before entering the voting booth.
+        </p>
+
+        <div class="form-group">
+
+            <label>
+                Student Name
+            </label>
+
+            <input
+                id="studentName"
+                placeholder="Enter full name"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Student ID
+            </label>
+
+            <input
+                id="studentId"
+                placeholder="Example: AIMT2026CS001"
+            >
+
+        </div>
+
+        <div class="hero-buttons">
+
+            <button
+                class="btn"
+                onclick="registerStudent()"
+            >
+                Register
+            </button>
+
+            <button
+                class="btn btn-outline"
+                onclick="studentLogin()"
+            >
+                Login
+            </button>
+
+            <button
+                class="btn btn-danger"
+                onclick="logoutStudent()"
+            >
+                Logout
+            </button>
+
+        </div>
+
+        <div
+            id="loginMessage"
+            class="login-message"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     ADMIN LOGIN
+========================= -->
+
+<section class="login-area">
+
+    <div class="login-card">
+
+        <h2>
+            🔐 Admin Access
+        </h2>
+
+        <p>
+            Election administrator control panel.
+        </p>
+
+        <div class="form-group">
+
+            <label>
+                Username
+            </label>
+
+            <input
+                id="adminUser"
+                placeholder="admin"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Password
+            </label>
+
+            <input
+                id="adminPass"
+                type="password"
+                placeholder="admin123"
+            >
+
+        </div>
+
+        <button
+            class="btn"
+            onclick="adminLogin()"
+        >
+            Open Admin Dashboard
+        </button>
+
+        <div
+            id="adminLoginMessage"
+            class="login-message"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     ADMIN DASHBOARD
+========================= -->
+
+<section
+    id="admin"
+    class="section admin-section"
+>
+
+    <div class="section-heading">
+
+        <span class="eyebrow">
+            ADMIN CONTROL CENTER
+        </span>
+
+        <h2>
+            Election Management
+        </h2>
+
+        <p>
+            Manage candidates and election state.
+        </p>
+
+    </div>
+
+    <div class="admin-grid">
+
+        <div class="admin-card">
+            <h3>Voters</h3>
+            <div
+                id="adminVoters"
+                class="admin-number"
+            >
+                0
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <h3>Candidates</h3>
+            <div
+                id="adminCandidates"
+                class="admin-number"
+            >
+                5
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <h3>Total Votes</h3>
+            <div
+                id="adminVotes"
+                class="admin-number"
+            >
+                0
+            </div>
+        </div>
+
+        <div class="admin-card">
+
+            <h3>
+                Election
+            </h3>
+
+            <div
+                id="adminElectionStatus"
+                class="admin-number"
+                style="font-size:20px"
+            >
+                OPEN
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="admin-card admin-box">
+
+        <h3>
+            Candidate Management
+        </h3>
+
+        <div class="admin-form">
+
+            <input
+                id="newName"
+                placeholder="Candidate name"
+            >
+
+            <input
+                id="newParty"
+                placeholder="Party / group"
+            >
+
+            <input
+                id="newSymbol"
+                placeholder="Symbol emoji"
+            >
+
+            <input
+                id="newManifesto"
+                placeholder="Manifesto"
+            >
+
+            <input
+                id="newThoughts"
+                placeholder="Political thought / student vision"
+            >
+
+            <button
+                class="btn"
+                onclick="addCandidate()"
+            >
+                + Add Candidate
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="admin-card">
+
+        <h3>
+            Candidate List
+        </h3>
+
+        <div
+            id="adminCandidateList"
+            class="admin-list"
+        ></div>
+
+    </div>
+
+    <br>
+
+    <div class="hero-buttons">
+
+        <button
+            class="btn btn-orange"
+            onclick="toggleElection()"
+        >
+            Toggle Election
+        </button>
+
+        <button
+            class="btn btn-danger"
+            onclick="resetElection()"
+        >
+            Reset Election
+        </button>
+
+        <button
+            class="btn btn-outline"
+            onclick="adminLogout()"
+        >
+            Admin Logout
+        </button>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     QUOTE
+========================= -->
+
+<section class="quotes-section">
+
+    <div class="quote-card">
+
+        <div
+            id="quoteText"
+            class="quote-text"
+        >
+            "A vote is a small action that can create a big change."
+        </div>
+
+        <div
+            id="quoteAuthor"
+            class="quote-author"
+        >
+            — SmartVote
+        </div>
+
+        <div class="quote-nav">
+
+            <span
+                class="quote-dot active"
+                onclick="changeQuote(0)"
+            ></span>
+
+            <span
+                class="quote-dot"
+                onclick="changeQuote(1)"
+            ></span>
+
+            <span
+                class="quote-dot"
+                onclick="changeQuote(2)"
+            ></span>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <div class="footer-logo">
+        🗳️ SmartVote
+    </div>
+
+    <p>
+        AIMT Student Election 2026
+    </p>
+
+    <br>
+
+    <div class="footer-small">
+        Educational voting management system demo.
+    </div>
+
+</footer>
+
+<!-- =========================
+     VOTE MODAL
+========================= -->
+
+<div
+    id="voteModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <h2>
+            Confirm Your Vote
+        </h2>
+
+        <p id="voteModalText">
+            Are you sure?
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                class="btn btn-green"
+                onclick="confirmVote()"
+            >
+                Confirm Vote
+            </button>
+
+            <button
+                class="btn btn-outline"
+                onclick="closeVoteModal()"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     TOAST
+========================= -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+<script>
+
+/* =========================================================
+   SMARTVOTE DATA
+========================================================= */
+
+const VERSION = "SMARTVOTE-3D-5CANDIDATES-V1";
+
+const defaultCandidates = [
+
+    {
+        id:1,
+        name:"Saurabh Kumar",
+        party:"Student Progress Alliance",
+        symbol:"🚀",
+        manifesto:
+        "Better labs, practical learning, transparent student representation and more opportunities for technical clubs.",
+        thoughts:
+        "Student politics should create measurable campus improvement. My focus is practical education, transparent representation and stronger technical opportunities.",
+        votes:0
+    },
+
+    {
+        id:2,
+        name:"Saumya Singh",
+        party:"Students First Forum",
+        symbol:"🌱",
+        manifesto:
+        "Student welfare, cleaner campus spaces, inclusive participation and a stronger feedback system for everyday student issues.",
+        thoughts:
+        "Student welfare comes first. Every student should have a fair platform to raise concerns, share ideas and participate in campus decisions.",
+        votes:0
+    },
+
+    {
+        id:3,
+        name:"Shruti",
+        party:"Campus Voice Collective",
+        symbol:"📣",
+        manifesto:
+        "A stronger student voice, open discussions, academic support initiatives and regular communication between students and administration.",
+        thoughts:
+        "Representation means communication. Students deserve an open forum where academic concerns, suggestions and decisions are discussed clearly.",
+        votes:0
+    },
+
+    {
+        id:4,
+        name:"Sumit Yadav",
+        party:"Development & Innovation Front",
+        symbol:"⚡",
+        manifesto:
+        "Innovation-focused campus activities, better digital services, skill development events and support for student projects.",
+        thoughts:
+        "A modern campus needs innovation. Student projects, digital services, competitions and skill development should be central to student leadership.",
+        votes:0
+    },
+
+    {
+        id:5,
+        name:"Aarav Sharma",
+        party:"Future Campus Movement",
+        symbol:"⭐",
+        manifesto:
+        "Career-focused initiatives, sports and cultural activities, peer mentoring and more student-led events across campus.",
+        thoughts:
+        "Student leadership should connect campus life with future careers through peer mentoring, student-led events and balanced academic development.",
+        votes:0
+    }
+
+];
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+if(localStorage.getItem("smartvote_version") !== VERSION){
+
+    localStorage.setItem(
+        "smartvote_version",
+        VERSION
+    );
+
+    localStorage.removeItem("smartvote_candidates");
+    localStorage.removeItem("smartvote_voters");
+    localStorage.removeItem("smartvote_current_user");
+    localStorage.removeItem("smartvote_election");
+}
+
+let candidates =
+    JSON.parse(
+        localStorage.getItem("smartvote_candidates")
+    ) || JSON.parse(
+        JSON.stringify(defaultCandidates)
+    );
+
+let voters =
+    JSON.parse(
+        localStorage.getItem("smartvote_voters")
+    ) || [];
+
+let currentUser =
+    JSON.parse(
+        localStorage.getItem("smartvote_current_user")
+    ) || null;
+
+let electionOpen =
+    JSON.parse(
+        localStorage.getItem("smartvote_election")
+    );
+
+if(electionOpen === null){
+    electionOpen = true;
+}
+
+let selectedCandidateId = null;
+
+let isAdmin =
+    sessionStorage.getItem("smartvote_admin") === "true";
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveData(){
+
+    localStorage.setItem(
+        "smartvote_candidates",
+        JSON.stringify(candidates)
+    );
+
+    localStorage.setItem(
+        "smartvote_voters",
+        JSON.stringify(voters)
+    );
+
+    localStorage.setItem(
+        "smartvote_election",
+        JSON.stringify(electionOpen)
+    );
+
+    if(currentUser){
+
+        localStorage.setItem(
+            "smartvote_current_user",
+            JSON.stringify(currentUser)
+        );
+
+    }else{
+
+        localStorage.removeItem(
+            "smartvote_current_user"
+        );
+    }
+}
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+/* =========================================================
+   CANDIDATE RENDER
+========================================================= */
+
+function renderCandidates(){
+
+    const grid =
+        document.getElementById(
+            "candidateGrid"
+        );
+
+    const query =
+        document
+            .getElementById("candidateSearch")
+            .value
+            .toLowerCase()
+            .trim();
+
+    const filtered =
+        candidates.filter(c => {
+
+            return (
+                c.name.toLowerCase().includes(query) ||
+                c.party.toLowerCase().includes(query) ||
+                c.manifesto.toLowerCase().includes(query) ||
+                (c.thoughts || "")
+                    .toLowerCase()
+                    .includes(query)
+            );
+
+        });
+
+    if(filtered.length === 0){
+
+        grid.innerHTML = `
+            <div class="feature">
+                <h3>No candidate found</h3>
+                <p>Try another search.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    grid.innerHTML =
+        filtered.map(c => `
+
+        <article class="candidate-card">
+
+            <div class="candidate-header">
+
+                <div class="candidate-symbol">
+                    ${escapeHTML(c.symbol)}
+                </div>
+
+                <span class="verified">
+                    ✓ VERIFIED
+                </span>
+
+            </div>
+
+            <h3>
+                ${escapeHTML(c.name)}
+            </h3>
+
+            <div class="party">
+                ${escapeHTML(c.party)}
+            </div>
+
+            <p>
+                ${escapeHTML(c.manifesto)}
+            </p>
+
+            <div class="candidate-thought">
+
+                <span>
+                    💬 Political Thought
+                </span>
+
+                <p>
+                    ${escapeHTML(
+                        c.thoughts ||
+                        c.manifesto
+                    )}
+                </p>
+
+            </div>
+
+            <button
+                class="btn vote-btn"
+                onclick="openVoteModal(${c.id})"
+                ${!electionOpen ? "disabled" : ""}
+            >
+                ${electionOpen
+                    ? "🗳️ Vote for Candidate"
+                    : "Election Closed"
+                }
+            </button>
+
+        </article>
+
+    `).join("");
+}
+
+/* =========================================================
+   VOTE MODAL
+========================================================= */
+
+function openVoteModal(id){
+
+    if(!electionOpen){
+
+        showToast(
+            "Election is currently closed."
+        );
+
+        return;
+    }
+
+    if(!currentUser){
+
+        showToast(
+            "Please register/login before voting."
+        );
+
+        document
+            .getElementById("login")
+            .scrollIntoView();
+
+        return;
+    }
+
+    const voter =
+        voters.find(
+            v => v.id === currentUser.id
+        );
+
+    if(voter && voter.hasVoted){
+
+        showToast(
+            "You have already voted."
+        );
+
+        return;
+    }
+
+    const candidate =
+        candidates.find(
+            c => c.id === id
+        );
+
+    if(!candidate) return;
+
+    selectedCandidateId = id;
+
+    document.getElementById(
+        "voteModalText"
+    ).innerHTML = `
+        You are voting for
+        <b>${escapeHTML(candidate.name)}</b>.
+        <br><br>
+        This action cannot be reversed.
+    `;
+
+    document
+        .getElementById("voteModal")
+        .classList.add("show");
+}
+
+function closeVoteModal(){
+
+    document
+        .getElementById("voteModal")
+        .classList.remove("show");
+
+    selectedCandidateId = null;
+}
+
+function confirmVote(){
+
+    if(!selectedCandidateId){
+        return;
+    }
+
+    if(!currentUser){
+
+        closeVoteModal();
+
+        showToast(
+            "Please login first."
+        );
+
+        return;
+    }
+
+    const voter =
+        voters.find(
+            v => v.id === currentUser.id
+        );
+
+    if(!voter || voter.hasVoted){
+
+        closeVoteModal();
+
+        showToast(
+            "You have already voted."
+        );
+
+        return;
+    }
+
+    const candidate =
+        candidates.find(
+            c => c.id === selectedCandidateId
+        );
+
+    if(!candidate){
+
+        closeVoteModal();
+
+        return;
+    }
+
+    candidate.votes++;
+
+    voter.hasVoted = true;
+
+    currentUser.hasVoted = true;
+
+    saveData();
+
+    closeVoteModal();
+
+    renderAll();
+
+    showToast(
+        "✅ Your vote has been recorded successfully!"
+    );
+
+}
+
+/* =========================================================
+   STUDENT REGISTER
+========================================================= */
+
+function registerStudent(){
+
+    const name =
+        document
+            .getElementById("studentName")
+            .value
+            .trim();
+
+    const id =
+        document
+            .getElementById("studentId")
+            .value
+            .trim()
+            .toUpperCase();
+
+    const message =
+        document.getElementById(
+            "loginMessage"
+        );
+
+    if(!name || !id){
+
+        message.style.color =
+            "var(--red)";
+
+        message.textContent =
+            "Please enter name and student ID.";
+
+        return;
+    }
+
+    if(
+        voters.some(
+            v => v.id === id
+        )
+    ){
+
+        message.style.color =
+            "var(--orange)";
+
+        message.textContent =
+            "Student ID already registered.";
+
+        return;
+    }
+
+    const voter = {
+        id:id,
+        name:name,
+        hasVoted:false
+    };
+
+    voters.push(voter);
+
+    currentUser = voter;
+
+    saveData();
+
+    message.style.color =
+        "var(--green)";
+
+    message.textContent =
+        "Registration successful. You are logged in.";
+
+    renderAll();
+
+    showToast(
+        "Welcome " + name + "!"
+    );
+}
+
+/* =========================================================
+   STUDENT LOGIN
+========================================================= */
+
+function studentLogin(){
+
+    const name =
+        document
+            .getElementById("studentName")
+            .value
+            .trim();
+
+    const id =
+        document
+            .getElementById("studentId")
+            .value
+            .trim()
+            .toUpperCase();
+
+    const message =
+        document.getElementById(
+            "loginMessage"
+        );
+
+    const voter =
+        voters.find(
+            v =>
+                v.id === id &&
+                v.name.toLowerCase() ===
+                name.toLowerCase()
+        );
+
+    if(!voter){
+
+        message.style.color =
+            "var(--red)";
+
+        message.textContent =
+            "Student not found. Please register first.";
+
+        return;
+    }
+
+    currentUser = voter;
+
+    saveData();
+
+    message.style.color =
+        "var(--green)";
+
+    message.textContent =
+        voter.hasVoted
+        ? "Login successful. You have already voted."
+        : "Login successful. You can vote now.";
+
+    showToast(
+        "Logged in as " + voter.name
+    );
+
+    renderAll();
+}
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logoutStudent(){
+
+    currentUser = null;
+
+    saveData();
+
+    document.getElementById(
+        "loginMessage"
+    ).textContent =
+        "Logged out successfully.";
+
+    renderAll();
+
+    showToast(
+        "Student logged out."
+    );
+}
+
+/* =========================================================
+   ADMIN LOGIN
+========================================================= */
+
+function adminLogin(){
+
+    const username =
+        document
+            .getElementById("adminUser")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("adminPass")
+            .value;
+
+    const message =
+        document.getElementById(
+            "adminLoginMessage"
+        );
+
+    if(
+        username === "admin" &&
+        password === "admin123"
+    ){
+
+        isAdmin = true;
+
+        sessionStorage.setItem(
+            "smartvote_admin",
+            "true"
+        );
+
+        document
+            .getElementById("admin")
+            .style.display = "block";
+
+        message.style.color =
+            "var(--green)";
+
+        message.textContent =
+            "Admin login successful.";
+
+        renderAdmin();
+
+        document
+            .getElementById("admin")
+            .scrollIntoView();
+
+        showToast(
+            "Admin dashboard unlocked."
+        );
+
+    }else{
+
+        message.style.color =
+            "var(--red)";
+
+        message.textContent =
+            "Invalid admin credentials.";
+    }
+}
+
+/* =========================================================
+   ADMIN LOGOUT
+========================================================= */
+
+function adminLogout(){
+
+    isAdmin = false;
+
+    sessionStorage.removeItem(
+        "smartvote_admin"
+    );
+
+    document
+        .getElementById("admin")
+        .style.display = "none";
+
+    showToast(
+        "Admin logged out."
+    );
+}
+
+/* =========================================================
+   ADMIN CANDIDATE ADD
+========================================================= */
+
+function addCandidate(){
+
+    if(!isAdmin){
+
+        showToast(
+            "Admin access required."
+        );
+
+        return;
+    }
+
+    const name =
+        document
+            .getElementById("newName")
+            .value
+            .trim();
+
+    const party =
+        document
+            .getElementById("newParty")
+            .value
+            .trim();
+
+    const symbol =
+        document
+            .getElementById("newSymbol")
+            .value
+            .trim() || "🗳️";
+
+    const manifesto =
+        document
+            .getElementById("newManifesto")
+            .value
+            .trim();
+
+    const thoughts =
+        document
+            .getElementById("newThoughts")
+            .value
+            .trim();
+
+    if(
+        !name ||
+        !party ||
+        !manifesto ||
+        !thoughts
+    ){
+
+        showToast(
+            "Please complete all candidate fields."
+        );
+
+        return;
+    }
+
+    candidates.push({
+
+        id:Date.now(),
+
+        name,
+
+        party,
+
+        symbol,
+
+        manifesto,
+
+        thoughts,
+
+        votes:0
+
+    });
+
+    saveData();
+
+    [
+        "newName",
+        "newParty",
+        "newSymbol",
+        "newManifesto",
+        "newThoughts"
+    ].forEach(id => {
+
+        document.getElementById(id).value = "";
+
+    });
+
+    renderAll();
+
+    showToast(
+        "Candidate added successfully."
+    );
+}
+
+/* =========================================================
+   ADMIN EDIT
+========================================================= */
+
+function editCandidate(id){
+
+    if(!isAdmin) return;
+
+    const candidate =
+        candidates.find(
+            c => c.id === id
+        );
+
+    if(!candidate) return;
+
+    const name =
+        prompt(
+            "Candidate name:",
+            candidate.name
+        );
+
+    if(name === null) return;
+
+    const party =
+        prompt(
+            "Party:",
+            candidate.party
+        );
+
+    if(party === null) return;
+
+    const manifesto =
+        prompt(
+            "Manifesto:",
+            candidate.manifesto
+        );
+
+    if(manifesto === null) return;
+
+    const thoughts =
+        prompt(
+            "Political thought:",
+            candidate.thoughts || ""
+        );
+
+    if(thoughts === null) return;
+
+    candidate.name = name.trim();
+
+    candidate.party = party.trim();
+
+    candidate.manifesto =
+        manifesto.trim();
+
+    candidate.thoughts =
+        thoughts.trim();
+
+    saveData();
+
+    renderAll();
+
+    showToast(
+        "Candidate updated."
+    );
+}
+
+/* =========================================================
+   DELETE CANDIDATE
+========================================================= */
+
+function deleteCandidate(id){
+
+    if(!isAdmin) return;
+
+    const candidate =
+        candidates.find(
+            c => c.id === id
+        );
+
+    if(!candidate) return;
+
+    const confirmed =
+        confirm(
+            "Delete " +
+            candidate.name +
+            "?"
+        );
+
+    if(!confirmed) return;
+
+    candidates =
+        candidates.filter(
+            c => c.id !== id
+        );
+
+    saveData();
+
+    renderAll();
+
+    showToast(
+        "Candidate deleted."
+    );
+}
+
+/* =========================================================
+   TOGGLE ELECTION
+========================================================= */
+
+function toggleElection(){
+
+    if(!isAdmin) return;
+
+    electionOpen =
+        !electionOpen;
+
+    saveData();
+
+    renderAll();
+
+    showToast(
+        electionOpen
+        ? "Election opened."
+        : "Election closed."
+    );
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetElection(){
+
+    if(!isAdmin) return;
+
+    const confirmed =
+        confirm(
+            "Reset all election data?"
+        );
+
+    if(!confirmed) return;
+
+    candidates =
+        JSON.parse(
+            JSON.stringify(defaultCandidates)
+        );
+
+    voters = [];
+
+    currentUser = null;
+
+    electionOpen = true;
+
+    saveData();
+
+    renderAll();
+
+    showToast(
+        "Election has been reset."
+    );
+}
+
+/* =========================================================
+   RESULT RENDER
+========================================================= */
+
+function renderResults(){
+
+    const totalVotes =
+        candidates.reduce(
+            (sum,c) =>
+                sum + Number(c.votes || 0),
+            0
+        );
+
+    const sorted =
+        [...candidates].sort(
+            (a,b) => b.votes - a.votes
+        );
+
+    const winner = sorted[0];
+
+    if(!winner || totalVotes === 0){
+
+        document.getElementById(
+            "winnerName"
+        ).textContent =
+            "No votes yet";
+
+        document.getElementById(
+            "winnerParty"
+        ).textContent =
+            "Waiting for student votes";
+
+        document.getElementById(
+            "winnerVotes"
+        ).textContent =
+            "0 Votes";
+
+    }else{
+
+        document.getElementById(
+            "winnerName"
+        ).textContent =
+            winner.name;
+
+        document.getElementById(
+            "winnerParty"
+        ).textContent =
+            winner.party;
+
+        document.getElementById(
+            "winnerVotes"
+        ).textContent =
+            winner.votes +
+            " Votes";
+    }
+
+    const list =
+        document.getElementById(
+            "resultList"
+        );
+
+    list.innerHTML =
+        sorted.map((c,index) => {
+
+            const percentage =
+                totalVotes
+                ? ((c.votes / totalVotes) * 100)
+                    .toFixed(1)
+                : 0;
+
+            return `
+
+                <div class="result">
+
+                    <div class="result-top">
+
+                        <strong>
+                            ${index + 1}. 
+                            ${escapeHTML(c.name)}
+                        </strong>
+
+                        <span>
+                            ${c.votes} votes
+                            •
+                            ${percentage}%
+                        </span>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            data-width="${percentage}%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+    setTimeout(() => {
+
+        document
+            .querySelectorAll(
+                ".progress div"
+            )
+            .forEach(bar => {
+
+                bar.style.width =
+                    bar.dataset.width;
+
+            });
+
+    },50);
+
+    const leaderShare =
+        totalVotes && winner
+        ? Math.round(
+            (winner.votes / totalVotes) * 100
+        )
+        : 0;
+
+    document.getElementById(
+        "leaderMargin"
+    ).textContent =
+        leaderShare + "%";
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function updateDashboard(){
+
+    const totalVotes =
+        candidates.reduce(
+            (sum,c) =>
+                sum + Number(c.votes || 0),
+            0
+        );
+
+    const voted =
+        voters.filter(
+            v => v.hasVoted
+        ).length;
+
+    const participation =
+        voters.length
+        ? Math.round(
+            (voted / voters.length) * 100
+        )
+        : 0;
+
+    document.getElementById(
+        "voterCount"
+    ).textContent =
+        voters.length.toLocaleString();
+
+    document.getElementById(
+        "candidateCount"
+    ).textContent =
+        candidates.length;
+
+    document.getElementById(
+        "voteCount"
+    ).textContent =
+        totalVotes.toLocaleString();
+
+    document.getElementById(
+        "participation"
+    ).textContent =
+        participation + "%";
+
+    document.getElementById(
+        "adminVoters"
+    ).textContent =
+        voters.length;
+
+    document.getElementById(
+        "adminCandidates"
+    ).textContent =
+        candidates.length;
+
+    document.getElementById(
+        "adminVotes"
+    ).textContent =
+        totalVotes;
+
+    document.getElementById(
+        "adminElectionStatus"
+    ).textContent =
+        electionOpen
+        ? "OPEN"
+        : "CLOSED";
+
+    document.getElementById(
+        "liveStatus"
+    ).textContent =
+        electionOpen
+        ? "LIVE MONITORING"
+        : "ELECTION CLOSED";
+
+    document.getElementById(
+        "activityText"
+    ).textContent =
+        totalVotes === 0
+        ? "Awaiting votes"
+        : totalVotes < 5
+            ? "Voting started"
+            : "Votes updating live";
+}
+
+/* =========================================================
+   ADMIN RENDER
+========================================================= */
+
+function renderAdmin(){
+
+    if(!isAdmin) return;
+
+    const list =
+        document.getElementById(
+            "adminCandidateList"
+        );
+
+    list.innerHTML =
+        candidates.map(c => `
+
+            <div class="admin-row">
+
+                <div>
+
+                    <strong>
+                        ${escapeHTML(c.symbol)}
+                        ${escapeHTML(c.name)}
+                    </strong>
+
+                    <br>
+
+                    <small
+                        style="color:var(--muted)"
+                    >
+                        ${escapeHTML(c.party)}
+                        •
+                        ${c.votes} votes
+                    </small>
+
+                </div>
+
+                <div class="admin-actions">
+
+                    <button
+                        class="btn"
+                        onclick="editCandidate(${c.id})"
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        class="btn btn-danger"
+                        onclick="deleteCandidate(${c.id})"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `).join("");
+}
+
+/* =========================================================
+   CLOCK
+========================================================= */
+
+function updateClock(){
+
+    document.getElementById(
+        "dashboardTime"
+    ).textContent =
+        new Date().toLocaleTimeString(
+            "en-IN",
+            {
+                hour12:false
+            }
+        );
+}
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function toggleTheme(){
+
+    document.body.classList.toggle(
+        "dark"
+    );
+
+    const dark =
+        document.body.classList.contains(
+            "dark"
+        );
+
+    localStorage.setItem(
+        "smartvote_theme",
+        dark
+            ? "dark"
+            : "light"
+    );
+
+    document.getElementById(
+        "themeBtn"
+    ).textContent =
+        dark
+        ? "☀️"
+        : "🌙";
+}
+
+if(
+    localStorage.getItem(
+        "smartvote_theme"
+    ) === "dark"
+){
+
+    document.body.classList.add(
+        "dark"
+    );
+
+    document.getElementById(
+        "themeBtn"
+    ).textContent = "☀️";
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+    clearTimeout(toastTimer);
+
+    toastTimer =
+        setTimeout(() => {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },3000);
+}
+
+/* =========================================================
+   QUOTES
+========================================================= */
+
+const quotes = [
+
+    {
+        text:
+        "A vote is a small action that can create a big change.",
+        author:
+        "— SmartVote"
+    },
+
+    {
+        text:
+        "Democracy becomes stronger when every voice gets a chance to be heard.",
+        author:
+        "— Student Election 2026"
+    },
+
+    {
+        text:
+        "Choose ideas, compare visions and make your voice count.",
+        author:
+        "— SmartVote"
+    }
+
+];
+
+let currentQuote = 0;
+
+function changeQuote(index){
+
+    currentQuote = index;
+
+    document.getElementById(
+        "quoteText"
+    ).textContent =
+        '"' +
+        quotes[index].text +
+        '"';
+
+    document.getElementById(
+        "quoteAuthor"
+    ).textContent =
+        quotes[index].author;
+
+    document
+        .querySelectorAll(".quote-dot")
+        .forEach(
+            (dot,i) => {
+
+                dot.classList.toggle(
+                    "active",
+                    i === index
+                );
+
+            }
+        );
+}
+
+setInterval(() => {
+
+    currentQuote =
+        (currentQuote + 1)
+        % quotes.length;
+
+    changeQuote(
+        currentQuote
+    );
+
+},5000);
+
+/* =========================================================
+   MAIN RENDER
+========================================================= */
+
+function renderAll(){
+
+    candidates =
+        candidates.map(c => ({
+
+            ...c,
+
+            thoughts:
+                c.thoughts ||
+                c.manifesto ||
+                "Student-focused leadership and transparent representation."
+
+        }));
+
+    renderCandidates();
+
+    renderResults();
+
+    updateDashboard();
+
+    renderAdmin();
+
+    if(currentUser){
+
+        const voter =
+            voters.find(
+                v =>
+                    v.id ===
+                    currentUser.id
+            );
+
+        if(voter){
+
+            document.getElementById(
+                "studentName"
+            ).value =
+                voter.name;
+
+            document.getElementById(
+                "studentId"
+            ).value =
+                voter.id;
+        }
+    }
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+
+renderAll();
+
+updateClock();
+
+setInterval(
+    updateClock,
+    1000
+);
+
+setInterval(() => {
+
+    updateDashboard();
+
+    renderResults();
+
+},2500);
+
+if(isAdmin){
+
+    document
+        .getElementById("admin")
+        .style.display = "block";
+}
+
+/* =========================================================
+   CLOSE MODAL BY BACKGROUND
+========================================================= */
+
+document
+    .getElementById("voteModal")
+    .addEventListener(
+        "click",
+        function(e){
+
+            if(e.target === this){
+
+                closeVoteModal();
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
